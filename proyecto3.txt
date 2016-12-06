@@ -1,0 +1,73 @@
+Problema
+--------
+
+Se quiere resolver un juego que consiste de una retícula de N x M
+casillas, cada una rodeada de 4 segmentos de recta de igual longitud.
+Las celdas  pueden venir etiquetadas con enteros en { 0, 1, 2, 3, 4 }
+que indican cuantos segmentos que rodean a la celda están en la
+solución.  La solución al juego consiste en trazar sobre los segmentos
+de la retícula una única línea cerrada, continua y simple (que no se
+dobla sobre si misma), la cual particiona las celdas en el grupo de
+celdas interiores al perímetro que define la línea y las celdas
+exteriores al mismo. Observar que para todo par de celdas c1 y c2:
+
+1. Ambas celdas son interiores si y sólo si existe un camino de c1
+   a c2 que no cruza el perímetro,
+
+2. Una celda es exterior si y solo si se puede trazar un camino que
+   "sale" del retículado sin cruzar el perímetro,
+
+3. Si c1 es interior y c2 es exterior, entonces todo camino que
+   conecta a c1 y c2 cruza el perímetro.
+
+Solución
+--------
+
+Usted debe construir un programa eficiente que solucione instancias
+arbitrarias del juego utilizando un SAT solver, como por ejemplo, 
+Minisat, Picosat, o zchaff.
+
+La entrada al sistema será un archivo de instancias en donde cada
+línea del archivo corresponde a una instancia distinta.  El programa
+tienen que generar un archivo de salida que contenga las instancias
+de entrada junto con la solución encontrada (en líneas distintas
+pero consecutivas).
+
+Cada líneas del archivo de entrada tiene el siguiente formato. Primero
+vienen dos enteros N y M separados por espacio que indican el tamaño
+de la retícula en N filas por M columnas. A continuación, separado por
+espacio, vienen N grupos de M carácteres sobre el alfabeto {.,0,1,2,3,4}.
+La idea es que la etiqueta para la celda en la coordenada (i,j) sobre
+el retículado, donde la esquina superior izquierda se corresponde con
+la celda (1,1), se corresponde con el j-ésimo carácter del i-ésimo
+grupo.  Si dicho carácter es igual a '.', entonces la celda no tienen
+una etiqueta asignada, sino su etiqueta viene dado por dicho carácter.
+
+Para cada línea del archivo de entrada (i.e., instancia del juego),
+el archivo de salida debe contener dos líneas. La primera es la misma
+línea en el archivo de entrada que describe la instancia. La segunda 
+indica cuales son los segmentos del retículado que definen la línea
+cerrada, simple y continua que satisface las restricciones impuestas
+por las etiquetas. Esta línea se especfíca indicando para cada 
+segmento de la retícula, con los símbolos 0 y 1, si dicho segmento
+pertenece o no a la solución. Los segmentos del retículado se 
+enumeran en orden comenzando por los segmentos horizontas en la
+primera fila, desde la esquina superior izquierda, seguidos de
+los segmentos verticales en la primera fila, luego los segmentos
+horizontales en la segunda fila, y así sucesivamente.
+
+Ver los ejemples de archivos de entrada y salida.
+
+Usted tiene que poder resolver de forma correcta todas las
+instancias provistas en el archivo instances.txt.
+
+Los SAT solver asumen que la forma proposicional viene codificada
+en el formato SATLIB (ver http://www.cs.ubc.ca/~hoos/SATLIB/benchm.html)
+
+Entregables
+-----------
+
+- Código fuente
+- Archivo de salida con las soluciones calculadas
+- Informe describiendo la solución implementada
+

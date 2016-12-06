@@ -1,0 +1,48 @@
+1 - up
+2 - down
+3 - le
+4 - rig
+5 - up-1
+6- left- (colum+1)
+7- rigth - (colum+1)
+8- UP+1
+9- DOWN - 1
+10- DOWN +1
+
+
+
+GENERAL
+(!X1||(X3 && X4))||(!X1||(X3&&X7))||(!X1||(X3&&X8))||(!X1||(X5&&X4))||(!X1||(X5&&X7))||(!X1||(X5&&X8))||(!X1||(X6&&X4))||(!X1||(X6&&X7)) ||(!X1||(X6&&X8))
+
+
+ESQUINA SUPERIOR IZQUIERDA
+	caso up-1==0
+	(!X1||(X3 && X4))||(!X1||(X3 && X8))
+
+ESQUINA SUPERIOR DERECHA
+	caso up mod column == 0 && Rigth - (colums+1) <= (row+1)*colums
+	(!X1||(X3 && X4))||(!X1||(X5 && X4))
+
+ESQUINA INFERIOR IZQUIERDA
+	caso down mod column == 1 && Rigth + (colums+1) > n_vars
+	(!X2||(X3 && X4))||(!X2||(X3 && X10))
+
+ESQUINA INFERIOR DERECHA
+	caso down+1 > (row+1)*colums
+	(!X2||(X3 && X4))||(!X2||(X9 && X4))
+
+SUPERIOR
+	caso Rigth - (colums+1) < (row+1)*colums
+	(!X1||(X3 && X4))||(!X1||(X3 && X8))||(!X1||(X5 && X4))||(!X1||(X5 && X8))
+
+IZQUIERDO 
+	caso up mod column == 1
+	(!X1||(X3 && X4))||(!X1||(X3 && X7))||(!X1||(X3 && X8))||(!X1||(X6 && X4))||(!X1||(X6 && X7))||(!X1||(X6 && X8))		
+
+DERECHO
+	caso up mod column == 0	
+	(!X1||(X3 && X4))||(!X1||(X3 && X7))||(!X1||(X5 && X4))||(!X1||(X5 && X7))||(!X1||(X6 && X4))||(!X1||(X6 && X7))
+
+INFERIOR
+	caso i == row-1
+	(!X2||(X3 && X4))||(!X2||(X3 && X10))||(!X2||(X9 && X4))||(!X2||(X9 && X10))	

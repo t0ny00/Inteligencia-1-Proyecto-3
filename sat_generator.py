@@ -227,12 +227,12 @@ class SatCreator():
             self.sat += "-%d %d 0\n" % (up, left)
             self.sat += "-%d %d %d 0\n" % (up,right,up+1)
             self.sat_counter += 2
-        elif up%self.columns == 0 && rigth-(self.columns+1) <= (self.row+1)*self.columns:
+        elif up%self.columns == 0 and rigth-(self.columns+1) <= (self.row+1)*self.columns:
             #esquina superior derecha
             self.sat += "-%d %d 0\n" % (up, right)
             self.sat += "-%d %d %d 0\n" % (up,left,up-1)
             self.sat_counter += 2
-        elif down%self.columns == 1 && rigth+(self.columns+1) > self.walls:
+        elif down%self.columns == 1 and rigth+(self.columns+1) > self.walls:
             #Esquina inferior izquierda
             self.sat += "-%d %d 0\n" % (down, left)
             self.sat += "-%d %d %d 0\n" % (down,right,down+1)

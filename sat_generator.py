@@ -217,6 +217,57 @@ class SatCreator():
                         self.sat += "-%d -%d %d 0\n" % (z0,z1,r)
                         self.sat_counter += 1
 
+    def addNeighbors(self,i,j):
+        up, down, left, right = self.getCoordValues(i,j)
+        #CLAUSES UP AND DOWN
+        if up-1 == 0:
+            #Esquina superior Izquierda
+            self.sat += "-%d %d 0\n" % (up, left)
+            self.sat += "-%d %d %d 0\n" % (up,right,up+1)
+            self.sat_counter += 2
+        elif up%self.columns == 0 && rigth-(self.columns+1) <= (self.row+1)*self.columns:
+            #esquina superior derecha
+            self.sat += "-%d %d 0\n" % (up, right)
+            self.sat += "-%d %d %d 0\n" % (up,left,up-1)
+            self.sat_counter += 2
+        elif down%self.columns == 1 && rigth+(self.columns+1) > self.walls:
+            #Esquina inferior izquierda
+            self.sat += "-%d %d 0\n" % (down, left)
+            self.sat += "-%d %d %d 0\n" % (down,right,down+1)
+            self.sat_counter += 2
+        elif down+1 > (self.rows+1)*self.columns:
+            #Esquina Inferior Derecha
+            self.sat += "-%d %d 0\n" % (down, right)
+            self.sat += "-%d %d %d 0\n" % (down,left,down-1)
+            self.sat_counter += 2
+        elif i == 0:
+            #Superior
+            self.sat += "-%d %d %d 0\n" % (up, left, up-1)
+            self.sat += "-%d %d %d 0\n" % (up, right, up+1)
+            self.sat_counter += 2
+        elif up%self.columns == 1:
+            #IZQUIERDO
+            self.sat += "-%d %d %d 0\n" % (up, left, left-(self.columns+1))
+            self.sat += "-%d %d %d %d 0\n" % (up, right, right-(self.columns+1), up+1)
+            self.sat_counter += 2
+        elif up%self.columns == 0:
+            #DERECHO
+            self.sat += "-%d %d %d 0\n" % (up, right, right-(self.columns+1))
+            self.sat += "-%d %d %d %d 0\n" % (up, left, left-(self.columns+1), up-1)
+            self.sat_counter += 2
+        else:
+            #General
+            self.sat += "-%d %d %d %d 0\n" % (up, left, up-1, left-(self.columns+1))
+            self.sat += "-%d %d %d %d 0\n" % (up, right, right-(self.columns+1), up+1)
+            self.sat_counter += 2
+
+        if i == self.rows-1:
+            #CASO DOWN
+            self.sat += "-%d %d %d 0\n" % (down, left, down-1)
+            self.sat += "-%d %d %d 0\n" % (down, right, down+1)
+            self.sat_counter += 2
+
+
     def test(self):
         z = self.walls
         test =""

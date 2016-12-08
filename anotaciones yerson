@@ -10,6 +10,7 @@
 10- DOWN +1
 
 
+CASOS PARA UP Y DOWN
 
 GENERAL
 (!X1||(X3 && X4))||(!X1||(X3&&X7))||(!X1||(X3&&X8))||(!X1||(X5&&X4))||(!X1||(X5&&X7))||(!X1||(X5&&X8))||(!X1||(X6&&X4))||(!X1||(X6&&X7)) ||(!X1||(X6&&X8))
@@ -43,6 +44,8 @@ DERECHO
 	caso up mod column == 0	
 	(!X1||(X3 && X4))||(!X1||(X3 && X7))||(!X1||(X5 && X4))||(!X1||(X5 && X7))||(!X1||(X6 && X4))||(!X1||(X6 && X7))
 
-INFERIOR
+INFERIOR (SOLO SE VERIFICARA SI i = rows -1)
 	caso i == row-1
-	(!X2||(X3 && X4))||(!X2||(X3 && X10))||(!X2||(X9 && X4))||(!X2||(X9 && X10))	
+	(!X2||(X3 && X4))||(!X2||(X3 && X10))||(!X2||(X9 && X4))||(!X2||(X9 && X10))
+
+

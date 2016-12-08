@@ -32,6 +32,7 @@ class SatCreator():
         self.addPerimeterClause()
         self.addReachableClause()
         self.addInnerReacheable()
+        # self.test()
 
     def getMatrix(self):
         return self.matrix
@@ -100,26 +101,26 @@ class SatCreator():
         for j in range(self.columns):
             up, down, left, right = self.getCoordValues(0,j)
             z = self.walls + (j+1)
-            self.sat += "-%d %d 0\n" % (up,z)
-            self.sat += "-%d %d 0\n" % (z,up)
+            self.sat += "%d %d 0\n" % (up,z)
+            self.sat += "-%d -%d 0\n" % (z,up)
             self.sat_counter += 2
         for j in range(self.columns):
             up, down, left, right = self.getCoordValues(self.rows-1,j)
             z = self.walls + (self.rows-1)*self.columns + (j+1)
-            self.sat += "-%d %d 0\n" % (down,z)
-            self.sat += "-%d %d 0\n" % (z,down)
+            self.sat += "%d %d 0\n" % (down,z)
+            self.sat += "-%d -%d 0\n" % (z,down)
             self.sat_counter += 2
         for i in range(self.rows):
             up, down, left, right = self.getCoordValues(i,0)
             z = self.walls + i*self.columns + 1
-            self.sat += "-%d %d 0\n" % (left,z)
-            self.sat += "-%d %d 0\n" % (z,left)
+            self.sat += "%d %d 0\n" % (left,z)
+            self.sat += "-%d -%d 0\n" % (z,left)
             self.sat_counter += 2
         for i in range(self.rows):
             up, down, left, right = self.getCoordValues(i,self.columns-1)
             z = self.walls + i*self.columns + self.columns
-            self.sat += "-%d %d 0\n" % (right,z)
-            self.sat += "-%d %d 0\n" % (z,right)
+            self.sat += "%d %d 0\n" % (right,z)
+            self.sat += "-%d -%d 0\n" % (z,right)
             self.sat_counter += 2
         for i in range(1,self.rows-1):
             for j in range(1,self.columns-1):
@@ -151,8 +152,31 @@ class SatCreator():
                 self.sat += "-%d %d %d %d %d 0\n" % (z0,z1,z2,z3,z4)
                 self.sat_counter += 20
 
+        # z = self.walls
+        # for i in range(self.rows):
+        #     for j in range(self.columns):
+        #         up, down, left, right = self.getCoordValues(i,j)
+        #         z += 1
+        #         z1 = z + 1
+        #         z3 = z - 1
+        #         z4 = z - self.columns
+        #         z2 = z + self.columns
+        #         if (i != 0) : 
+        #             self.sat += "-%d %d %d 0\n" % (z4,up,z)
+        #             self.sat_counter += 1
+        #         if (i != self.rows-1) : 
+        #             self.sat += "-%d %d %d 0\n" % (z2,down,z)
+        #             self.sat_counter += 1
+        #         if (j != 0) : 
+        #             self.sat += "-%d %d %d 0\n" % (z3,left,z)
+        #             self.sat_counter += 1
+        #         if (j != self.columns-1) : 
+        #             self.sat += "-%d %d %d 0\n" % (z1,right,z)
+        #             self.sat_counter += 1
+
+
     def addReachableClause(self):
-        #self.sat += 'reach\n'
+        # self.sat += 'reach\n'
 
         r = self.reach + 1 
         for i in range(self.rows):
@@ -166,20 +190,19 @@ class SatCreator():
             for j in range(self.columns):
                 for k in range(self.rows):
                     for l in range(self.columns):
-                        r += 1
-                        if (i != k or  j != l):
+                            r += 1
                             up, down, left, right = self.getCoordValues(k,l)
                             r2 = self.reach + (i*self.columns+j)*self.rows*self.columns+k*self.columns+l+1
-                            if (k != 0 and (i != k  and j!= l)) :
+                            if (k != 0 ) :
                                 self.sat += "-%d %d %d 0\n" % (r,up,r2-self.columns)
                                 self.sat_counter += 1
-                            if (k != self.rows-1 and (i != k  and j!= l)): 
+                            if (k != self.rows-1 ): 
                                 self.sat += "-%d %d %d 0\n" % (r,down,r2+self.columns)
                                 self.sat_counter += 1
-                            if (l != 0 and (i != k  and j!= l)) :
+                            if (l != 0 ) :
                                 self.sat += "-%d %d %d 0\n" % (r,left,r2-1)
                                 self.sat_counter += 1
-                            if (l != self.columns-1 and (i != k  and j!= l)): 
+                            if (l != self.columns-1 ): 
                                 self.sat += "-%d %d %d 0\n" % (r,right,r2+1)
                                 self.sat_counter += 1
                                 
@@ -194,6 +217,16 @@ class SatCreator():
                         self.sat += "-%d -%d %d 0\n" % (z0,z1,r)
                         self.sat_counter += 1
 
+    def test(self):
+        z = self.walls
+        test =""
+        for i in range(self.rows):
+            for j in range(self.columns):
+                z +=1
+                test += " -" + str(z)
+        test += " 0\n"
+        self.sat += test
+        self.sat_counter += 1
 
     def getCoordValues(self,i,j):
         up      = i*self.columns + j + 1

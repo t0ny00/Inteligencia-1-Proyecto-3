@@ -1,4 +1,6 @@
 import sys
+from subprocess import call
+import os
 
 class SatCreator():
 
@@ -214,7 +216,7 @@ class SatCreator():
                         z0 = self.walls + i*self.columns + j + 1
                         z1 = self.walls + k*self.columns + l + 1
                         r = self.reach + (i*self.columns+j)*self.rows*self.columns+k*self.columns+l+1
-                        self.sat += "-%d -%d %d 0\n" % (z0,z1,r)
+                        self.sat += "%d %d %d 0\n" % (z0,z1,r)
                         self.sat_counter += 1
 
     def test(self):
@@ -227,6 +229,7 @@ class SatCreator():
         test += " 0\n"
         self.sat += test
         self.sat_counter += 1
+
 
     def getCoordValues(self,i,j):
         up      = i*self.columns + j + 1
@@ -256,21 +259,57 @@ def strMatrixToLists(matrix):
         lista.append(act_list)
     return lista
 
+def translateSolution(translated_file,instance,file_name,rows,columns):
+    file = open(file_name,'r')
+    translated_file.write(instance )
+    for line in file:
+        if (line == 'UNSAT\n'): break
+        elif (line == 'SAT\n' or line == '\r'): continue
+        translated_file.write(str(rows) + ' ' + str(columns) + ' ' )
+        parsed = line.split(' ')
+        
+        i,k = 0,0
+        res = ""
+        while (i < (rows+1) or k < (rows)) :
+            if (i < (rows+1)) :
+                for j in range(i*rows,i*rows+columns):
+                    if (int(parsed[j]) > 0 ): res += "1"
+                    else : res += "0"
+                res += ' '
+            if (k < (rows)) :
+                for j in range(columns+1):
+                    if (int(parsed[(columns*(rows+1))+k*(columns+1)+j]) > 0 ): res += '1'
+                    else : res += "0"
+
+                res += ' '
+            i += 1
+            k += 1
+
+        translated_file.write(res + '\n' + '\n')
+         
+
 
 
 if __name__ == "__main__":
     args = sys.argv
-    if len(args) != 2:
-        print("Usage: python sat_generator.py [input file]")
+    if len(args) != 4:
+        print("Usage: python sat_generator.py [input file] [minisat path] [output fle]")
         exit(0)
     file = open(args[1],'r')
+    translated_file = open(args[3],'w')
     for line in file:
+        tmp_file = open("sat_file.txt",'w')
         parsed = line.split(' ')
         rows     = int(parsed[0])
         columns = int(parsed[1])
         matrix  = strMatrixToLists(parsed[2:])
         sat_creator = SatCreator(rows,columns,matrix)
         sat_creator.claus_generator()
-        print(sat_creator.getSat())
-
+        # print(sat_creator.getSat())
+        tmp_file.write(sat_creator.getSat())
+        tmp_file.close()
+        call(args[2] + " sat_file.txt sat_solved.txt",shell = True)
+        translateSolution(translated_file,line,"sat_solved.txt",rows,columns)
+    os.remove("sat_file.txt")
+    os.remove("sat_solved.txt")
 

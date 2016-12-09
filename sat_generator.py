@@ -31,9 +31,11 @@ class SatCreator():
                 elif column == -1:
                     #self.addEmptyClause(i,j)
                     pass
+                # self.addNeighbors(i,j)
         self.addPerimeterClause()
         self.addReachableClause()
         self.addInnerReacheable()
+        self.addInOutReacheable()
         # self.test()
 
     def getMatrix(self):
@@ -219,56 +221,122 @@ class SatCreator():
                         self.sat += "%d %d %d 0\n" % (z0,z1,r)
                         self.sat_counter += 1
 
+    def addInOutReacheable(self):
+        for i in range(self.rows):
+            for j in range(self.columns):
+                for k in range(self.rows):
+                    for l in range(self.columns):
+                        z0 = self.walls + i*self.columns + j + 1
+                        z1 = self.walls + k*self.columns + l + 1
+                        r = self.reach + (i*self.columns+j)*self.rows*self.columns+k*self.columns+l+1
+                        self.sat += "-%d %d -%d 0\n" % (z0,z1,r)
+                        self.sat_counter += 1
+
+
     def addNeighbors(self,i,j):
         up, down, left, right = self.getCoordValues(i,j)
         #CLAUSES UP AND DOWN
-        if up-1 == 0:
+        if i == 0 and j == 0:
             #Esquina superior Izquierda
             self.sat += "-%d %d 0\n" % (up, left)
             self.sat += "-%d %d %d 0\n" % (up,right,up+1)
             self.sat_counter += 2
-        elif up%self.columns == 0 and rigth-(self.columns+1) <= (self.row+1)*self.columns:
+
+        elif i == 0 and j == self.columns-1:
             #esquina superior derecha
             self.sat += "-%d %d 0\n" % (up, right)
             self.sat += "-%d %d %d 0\n" % (up,left,up-1)
             self.sat_counter += 2
-        elif down%self.columns == 1 and rigth+(self.columns+1) > self.walls:
-            #Esquina inferior izquierda
-            self.sat += "-%d %d 0\n" % (down, left)
-            self.sat += "-%d %d %d 0\n" % (down,right,down+1)
-            self.sat_counter += 2
-        elif down+1 > (self.rows+1)*self.columns:
-            #Esquina Inferior Derecha
-            self.sat += "-%d %d 0\n" % (down, right)
-            self.sat += "-%d %d %d 0\n" % (down,left,down-1)
-            self.sat_counter += 2
+
         elif i == 0:
             #Superior
             self.sat += "-%d %d %d 0\n" % (up, left, up-1)
             self.sat += "-%d %d %d 0\n" % (up, right, up+1)
             self.sat_counter += 2
-        elif up%self.columns == 1:
+
+        elif j == 0:
             #IZQUIERDO
             self.sat += "-%d %d %d 0\n" % (up, left, left-(self.columns+1))
             self.sat += "-%d %d %d %d 0\n" % (up, right, right-(self.columns+1), up+1)
             self.sat_counter += 2
-        elif up%self.columns == 0:
+
+        elif j == self.columns-1:
             #DERECHO
             self.sat += "-%d %d %d 0\n" % (up, right, right-(self.columns+1))
             self.sat += "-%d %d %d %d 0\n" % (up, left, left-(self.columns+1), up-1)
             self.sat_counter += 2
+
         else:
             #General
             self.sat += "-%d %d %d %d 0\n" % (up, left, up-1, left-(self.columns+1))
             self.sat += "-%d %d %d %d 0\n" % (up, right, right-(self.columns+1), up+1)
             self.sat_counter += 2
 
-        if i == self.rows-1:
+
+        if i == self.rows-1 and j == 0:
+            #Esquina inferior izquierda
+            self.sat += "-%d %d 0\n" % (down, left)
+            self.sat += "-%d %d %d 0\n" % (down,right,down+1)
+            self.sat_counter += 2
+
+        elif i == self.rows-1 and j == self.columns-1:
+            #Esquina Inferior Derecha
+            self.sat += "-%d %d 0\n" % (down, right)
+            self.sat += "-%d %d %d 0\n" % (down,left,down-1)
+            self.sat_counter += 2
+
+        elif i == self.rows-1:
             #CASO DOWN
             self.sat += "-%d %d %d 0\n" % (down, left, down-1)
             self.sat += "-%d %d %d 0\n" % (down, right, down+1)
             self.sat_counter += 2
 
+            # Left and right
+
+        if (i == 0 and j == 0 ) :
+            #Esquina SUPERIOR IZQUIERDA 
+            self.sat += "-%d %d 0\n" % (left, up)
+            self.sat += "-%d %d %d 0\n" % (left,down,left+self.columns+1)
+            self.sat_counter += 2
+
+        elif (i == self.rows-1 and j == 0 ) :
+            #Esquina inferior izquierda 
+            self.sat += "-%d %d 0\n" % (left, down)
+            self.sat += "-%d %d %d 0\n" % (left,left- self.columns+1 ,up)
+            self.sat_counter += 2
+        
+        elif i == 0:
+            #superior
+            self.sat += "-%d %d %d 0\n" % (left, up-1, up)
+            self.sat += "-%d %d %d %d 0\n" % (left, left+self.columns+1, down, down-1)
+            self.sat_counter += 2
+
+        elif i == self.rows-1:
+            #inferior
+            self.sat += "-%d %d %d 0\n" % (left, down, down-1)
+            self.sat += "-%d %d %d %d 0\n" % (left, up, left-self.columns+1, up-1)
+            self.sat_counter += 2
+
+        elif j == 0:
+            #izquierdo
+            self.sat += "-%d %d %d 0\n" % (left, left- self.columns+1, up)
+            self.sat += "-%d %d %d 0\n" % (left, down, left+self.columns+1)
+            self.sat_counter += 2
+
+        if j == self.columns-1  and i == 0:
+            self.sat += "-%d %d 0\n" % (right, up)
+            self.sat += "-%d %d %d 0\n" % (right,right+self.columns+1 ,down)
+            self.sat_counter += 2
+
+        elif j == self.columns-1  and i == self.rows-1:
+            self.sat += "-%d %d 0\n" % (right, down)
+            self.sat += "-%d %d %d 0\n" % (right,up ,right - self.columns+1)
+            self.sat_counter += 2
+
+        elif j == self.columns-1:
+            self.sat += "-%d %d %d 0\n" % (right, right-self.columns+1, up)
+            self.sat += "-%d %d %d 0\n" % (right, right+self.columns+1, down)
+            self.sat_counter += 2
 
     def test(self):
         z = self.walls
@@ -361,6 +429,6 @@ if __name__ == "__main__":
         tmp_file.close()
         call(args[2] + " sat_file.txt sat_solved.txt",shell = True)
         translateSolution(translated_file,line,"sat_solved.txt",rows,columns)
-    os.remove("sat_file.txt")
-    os.remove("sat_solved.txt")
+    # os.remove("sat_file.txt")
+    # os.remove("sat_solved.txt")
 

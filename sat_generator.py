@@ -240,56 +240,78 @@ class SatCreator():
             #Esquina superior Izquierda
             self.sat += "-%d %d 0\n" % (up, left)
             self.sat += "-%d %d %d 0\n" % (up,right,up+1)
-            self.sat_counter += 2
+            self.sat += "-%d -%d -%d 0\n" % (up,right,up+1)
+            self.sat_counter += 3
 
         elif i == 0 and j == self.columns-1:
             #esquina superior derecha
             self.sat += "-%d %d 0\n" % (up, right)
             self.sat += "-%d %d %d 0\n" % (up,left,up-1)
-            self.sat_counter += 2
+            self.sat += "-%d -%d -%d 0\n" % (up,left,up-1)
+            self.sat_counter += 3
 
         elif i == 0:
             #Superior
             self.sat += "-%d %d %d 0\n" % (up, left, up-1)
+            self.sat += "-%d -%d -%d 0\n" % (up, left, up-1)
             self.sat += "-%d %d %d 0\n" % (up, right, up+1)
-            self.sat_counter += 2
+            self.sat += "-%d -%d -%d 0\n" % (up, right, up+1)
+            self.sat_counter += 4
 
         elif j == 0:
             #IZQUIERDO
             self.sat += "-%d %d %d 0\n" % (up, left, left-(self.columns+1))
+            self.sat += "-%d -%d -%d 0\n" % (up, left, left-(self.columns+1))
+            self.sat += "-%d -%d -%d 0\n" % (up, right, right-(self.columns+1))
+            self.sat += "-%d -%d -%d 0\n" % (up, right, up+1)
+            self.sat += "-%d -%d -%d 0\n" % (up, right-(self.columns+1),up+1)
             self.sat += "-%d %d %d %d 0\n" % (up, right, right-(self.columns+1), up+1)
-            self.sat_counter += 2
+            self.sat_counter += 6
 
         elif j == self.columns-1:
             #DERECHO
             self.sat += "-%d %d %d 0\n" % (up, right, right-(self.columns+1))
-            self.sat += "-%d %d %d %d 0\n" % (up, left, left-(self.columns+1), up-1)
-            self.sat_counter += 2
+            self.sat += "-%d -%d -%d 0\n" % (up, right, right-(self.columns+1))
+            self.sat += "-%d -%d -%d 0\n" % (up, left, up-1)
+            self.sat += "-%d -%d -%d 0\n" % (up, left, left-(self.columns+1))
+            self.sat += "-%d -%d -%d 0\n" % (up, up-1, left-(self.columns+1))
+            self.sat += "-%d %d %d %d 0\n" % (up, left, up-1, left-(self.columns+1))
+            self.sat_counter += 6
 
         else:
             #General
-            self.sat += "-%d %d %d %d 0\n" % (up, left, up-1, left-(self.columns+1))
-            self.sat += "-%d %d %d %d 0\n" % (up, right, right-(self.columns+1), up+1)
-            self.sat_counter += 2
+            self.sat += "-%d -%d -%d 0\n" % (up,left,left-(self.columns+1))
+            self.sat += "-%d %d %d 0\n" % (up,left,left-(self.columns+1))
+            self.sat += "-%d -%d -%d 0\n" % (up,right,right-(self.columns+1))
+            self.sat += "-%d -%d -%d 0\n" % (up,right,up+1)
+            self.sat += "-%d %d -%d 0\n" % (up,right,up-1)
+            self.sat += "-%d %d %d %d 0\n" % (up,right,right-(self.columns+1),up+1)
+            self.sat += "-%d -%d %d 0\n" % (up,up-1,left-(self.columns+1))
+            self.sat += "-%d -%d -%d 0\n" % (up,right-(self.columns+1),up+1)
+            self.sat_counter += 8
 
 
         if i == self.rows-1 and j == 0:
             #Esquina inferior izquierda
             self.sat += "-%d %d 0\n" % (down, left)
+            self.sat += "-%d -%d -%d 0\n" % (down,right,down+1)
             self.sat += "-%d %d %d 0\n" % (down,right,down+1)
-            self.sat_counter += 2
+            self.sat_counter += 3
 
         elif i == self.rows-1 and j == self.columns-1:
             #Esquina Inferior Derecha
             self.sat += "-%d %d 0\n" % (down, right)
             self.sat += "-%d %d %d 0\n" % (down,left,down-1)
-            self.sat_counter += 2
+            self.sat += "-%d -%d -%d 0\n" % (down,left,down-1)
+            self.sat_counter += 3
 
         elif i == self.rows-1:
             #CASO DOWN
             self.sat += "-%d %d %d 0\n" % (down, left, down-1)
+            self.sat += "-%d -%d -%d 0\n" % (down, left, down-1)
             self.sat += "-%d %d %d 0\n" % (down, right, down+1)
-            self.sat_counter += 2
+            self.sat += "-%d -%d -%d 0\n" % (down, right, down+1)
+            self.sat_counter += 4
 
             # Left and right
 
@@ -297,46 +319,65 @@ class SatCreator():
             #Esquina SUPERIOR IZQUIERDA 
             self.sat += "-%d %d 0\n" % (left, up)
             self.sat += "-%d %d %d 0\n" % (left,down,left+self.columns+1)
-            self.sat_counter += 2
+            self.sat += "-%d -%d -%d 0\n" % (left,down,left+self.columns+1)
+            self.sat_counter += 3
 
         elif (i == self.rows-1 and j == 0 ) :
             #Esquina inferior izquierda 
             self.sat += "-%d %d 0\n" % (left, down)
-            self.sat += "-%d %d %d 0\n" % (left,left- self.columns+1 ,up)
-            self.sat_counter += 2
+            self.sat += "-%d %d %d 0\n" % (left, up,left- self.columns+1)
+            self.sat += "-%d -%d -%d 0\n" % (left, up,left- (self.columns+1))
+            self.sat_counter += 3
         
         elif i == 0:
             #superior
-            self.sat += "-%d %d %d 0\n" % (left, up-1, up)
-            self.sat += "-%d %d %d %d 0\n" % (left, left+self.columns+1, down, down-1)
-            self.sat_counter += 2
+            self.sat += "-%d %d %d 0\n" % (left, up, up-1)
+            self.sat += "-%d -%d -%d 0\n" % (left, up , up-1)
+            self.sat += "-%d -%d -%d 0\n" % (left, down , down-1)
+            self.sat += "-%d -%d -%d 0\n" % (left, left + self.columns+1, down-1)
+            self.sat += "-%d %d %d %d 0\n" % (left, down, down-1, left + self.columns+1)
+            self.sat += "-%d -%d -%d 0\n" % (left, left + self.columns+1, down)
+            self.sat_counter += 6
 
         elif i == self.rows-1:
             #inferior
             self.sat += "-%d %d %d 0\n" % (left, down, down-1)
-            self.sat += "-%d %d %d %d 0\n" % (left, up, left-self.columns+1, up-1)
-            self.sat_counter += 2
+            self.sat += "-%d -%d -%d 0\n" % (left, down, down-1)
+            self.sat += "-%d -%d -%d 0\n" % (left, up, up-1)
+            self.sat += "-%d -%d -%d 0\n" % (left, up, left-(self.columns+1))
+            self.sat += "-%d %d %d %d 0\n" % (left, up, up-1, left-self.columns+1)
+            self.sat += "-%d -%d -%d 0\n" % (left, up-1, left-(self.columns+1))
+            self.sat_counter += 6
 
         elif j == 0:
             #izquierdo
-            self.sat += "-%d %d %d 0\n" % (left, left- self.columns+1, up)
+            self.sat += "-%d %d %d 0\n" % (left, left- (self.columns+1), up)
+            self.sat += "-%d -%d -%d 0\n" % (left, left- (self.columns+1), up)
             self.sat += "-%d %d %d 0\n" % (left, down, left+self.columns+1)
-            self.sat_counter += 2
+            self.sat += "-%d -%d -%d 0\n" % (left, down, left+self.columns+1)
+            self.sat_counter += 4
+        else
+            #GENERAL
+            pass
 
         if j == self.columns-1  and i == 0:
             self.sat += "-%d %d 0\n" % (right, up)
             self.sat += "-%d %d %d 0\n" % (right,right+self.columns+1 ,down)
-            self.sat_counter += 2
+            self.sat += "-%d -%d -%d 0\n" % (right,right+self.columns+1 ,down)
+            self.sat_counter += 3
 
         elif j == self.columns-1  and i == self.rows-1:
             self.sat += "-%d %d 0\n" % (right, down)
-            self.sat += "-%d %d %d 0\n" % (right,up ,right - self.columns+1)
-            self.sat_counter += 2
+            self.sat += "-%d %d %d 0\n" % (right,up ,right - (self.columns+1))
+            self.sat += "-%d -%d -%d 0\n" % (right,up ,right - (self.columns+1))
+            self.sat_counter += 3
 
         elif j == self.columns-1:
-            self.sat += "-%d %d %d 0\n" % (right, right-self.columns+1, up)
+            self.sat += "-%d %d %d 0\n" % (right, right-(self.columns+1), up)
+            self.sat += "-%d -%d -%d 0\n" % (right, right-(self.columns+1), up)
             self.sat += "-%d %d %d 0\n" % (right, right+self.columns+1, down)
-            self.sat_counter += 2
+            self.sat += "-%d -%d -%d 0\n" % (right, right+self.columns+1, down)
+            self.sat_counter += 4
 
     def test(self):
         z = self.walls

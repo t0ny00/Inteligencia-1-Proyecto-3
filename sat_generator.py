@@ -358,7 +358,15 @@ class SatCreator():
             self.sat_counter += 4
         else
             #GENERAL
-            pass
+            self.sat += "-%d -%d -%d 0\n" % (down-1, down, left)
+            self.sat += "-%d -%d -%d 0\n" % (down-1, left, left+self.columns+1)
+            self.sat += "-%d %d %d %d 0\n" % (left, down-1, down, left+self.columns+1)
+            self.sat += "-%d -%d -%d 0\n" % (up, left, up-1)
+            self.sat += "-%d -%d -%d 0\n" % (up, left, left-(self.columns+1))
+            self.sat += "-%d %d %d %d 0\n" % (left, up, up-1, left-(self.columns+1))
+            self.sat += "-%d -%d -%d 0\n" % (down, left, left+(self.columns+1))
+            self.sat += "-%d -%d -%d 0\n" % (left,up-1, left-(self.columns+1))
+            self.sat_counter += 8
 
         if j == self.columns-1  and i == 0:
             self.sat += "-%d %d 0\n" % (right, up)

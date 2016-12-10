@@ -269,6 +269,9 @@ class SatCreator():
             self.sat += "-%d %d %d 0\n" % (down, right, down+1)
             self.sat_counter += 2
 
+        #Clauses LEFT AND RIGTH
+        
+        
 
     def test(self):
         z = self.walls

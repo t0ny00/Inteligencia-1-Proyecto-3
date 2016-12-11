@@ -218,7 +218,7 @@ class SatCreator():
                         z0 = self.walls + i*self.columns + j + 1
                         z1 = self.walls + k*self.columns + l + 1
                         r = self.reach + (i*self.columns+j)*self.rows*self.columns+k*self.columns+l+1
-                        self.sat += "%d %d %d 0\n" % (z0,z1,r)
+                        self.sat += "-%d -%d %d 0\n" % (z0,z1,r)
                         self.sat_counter += 1
 
     def addInOutReacheable(self):
@@ -280,16 +280,15 @@ class SatCreator():
 
         else:
             #General
+            self.sat += "-%d -%d -%d 0\n" % (up,left,up-1)
             self.sat += "-%d -%d -%d 0\n" % (up,left,left-(self.columns+1))
-            self.sat += "-%d %d %d 0\n" % (up,left,left-(self.columns+1))
+            self.sat += "-%d -%d -%d 0\n" % (up,up-1,left-(self.columns+1))
+            self.sat += "-%d %d %d %d 0\n" % (up,left,up-1,left-(self.columns+1))
             self.sat += "-%d -%d -%d 0\n" % (up,right,right-(self.columns+1))
             self.sat += "-%d -%d -%d 0\n" % (up,right,up+1)
-            self.sat += "-%d %d -%d 0\n" % (up,right,up-1)
-            self.sat += "-%d %d %d %d 0\n" % (up,right,right-(self.columns+1),up+1)
-            self.sat += "-%d -%d %d 0\n" % (up,up-1,left-(self.columns+1))
-            self.sat += "-%d -%d -%d 0\n" % (up,right-(self.columns+1),up+1)
+            self.sat += "-%d -%d -%d 0\n" % (up,right-(columns+1),up+1)
+            self.sat += "-%d %d %d %d 0\n" % (up,right,right-(columns+1),up+1)            
             self.sat_counter += 8
-
 
         if i == self.rows-1 and j == 0:
             #Esquina inferior izquierda

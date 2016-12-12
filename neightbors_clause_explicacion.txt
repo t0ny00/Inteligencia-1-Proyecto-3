@@ -62,3 +62,6 @@ de la siguiente manera:
 ((RIGHT(i,j) => UP(i,j) && ¬RIGHT(i,j-1) && ¬DOWN(i,j) && RIGHT(i,j+1)) ||
 ((RIGHT(i,j) => ¬UP(i,j) && RIGHT(i,j-1) && DOWN(i,j) && ¬RIGHT(i,j+1)) ||
 ((RIGHT(i,j) => ¬UP(i,j) && RIGHT(i,j-1) && ¬DOWN(i,j) && RIGHT(i,j+1))
+
+	Como en los casos anteriores cabe destacar que se implementaron los casos
+particulares para los cuales la cara derecha estuviese en una esquina derecha.

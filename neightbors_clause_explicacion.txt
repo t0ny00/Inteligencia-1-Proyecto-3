@@ -1,0 +1,64 @@
+
+	Usamos los vecinos para crear la implementacion de que cada recta solo
+puede tener maximo dos rectas adjacentes a ella.
+	De esta forma teniamos rectas que era la parte de arriba de un cuadrante 
+(UP) que podia tener 6 posibles casos de conexión. De esta forma el caso 
+general venia dado por:
+
+(UP(i,j) => UP(i-1,j) && UP(i+1,j) && ¬RIGHT(i,j) && ¬LEFT(i,j) && ¬RIGHT(i,j-1) && ¬LEFT(i,j-1)) ||
+(UP(i,j) => UP(i-1,j) && ¬UP(i+1,j) && RIGHT(i,j) && ¬LEFT(i,j) && ¬RIGHT(i,j-1) && ¬LEFT(i,j-1)) ||
+(UP(i,j) => UP(i-1,j) && ¬UP(i+1,j) && ¬RIGHT(i,j) && ¬LEFT(i,j) && RIGHT(i,j-1) && ¬LEFT(i,j-1)) ||
+(UP(i,j) => ¬UP(i-1,j) && UP(i+1,j) && ¬RIGHT(i,j) && LEFT(i,j) && ¬RIGHT(i,j-1) && ¬LEFT(i,j-1)) ||
+(UP(i,j) => ¬UP(i-1,j) && ¬UP(i+1,j) && RIGHT(i,j) && LEFT(i,j) && ¬RIGHT(i,j-1) && ¬LEFT(i,j-1)) ||
+(UP(i,j) => ¬UP(i-1,j) && ¬UP(i+1,j) && ¬RIGHT(i,j) && LEFT(i,j) && RIGHT(i,j-1) && ¬LEFT(i,j-1)) ||
+(UP(i,j) => ¬UP(i-1,j) && UP(i+1,j) && ¬RIGHT(i,j) && ¬LEFT(i,j) && ¬RIGHT(i,j-1) && LEFT(i,j-1)) ||
+(UP(i,j) => ¬UP(i-1,j) && ¬UP(i+1,j) && RIGHT(i,j) && ¬LEFT(i,j) && ¬RIGHT(i,j-1) && LEFT(i,j-1)) ||
+(UP(i,j) => ¬UP(i-1,j) && ¬UP(i+1,j) && ¬RIGHT(i,j) && ¬LEFT(i,j) && RIGHT(i,j-1) && LEFT(i,j-1)) ||
+
+	De tal forma se hizo la conversión a CNF para que quedara como caso general,
+en el código se puede apreciar que se implementaron las caras de arriba para las 
+esquinas superiores,cara superior (i=0), cara izquierda(j=0) y cara derecha 
+(j=columns-1).
+
+	Para no repetir los casos estudiando las caras inferiores (DOWN) estas 
+solamente se les crea sus respectivas clausulas si esta en la cara inferior de 
+la matriz (i = rows-1); de tal forma su caso general venia dado por:
+
+((DOWN(i,j) => DOWN(i-1,j) && DOWN(i+1,j) && ¬RIGHT(i,j) && ¬LEFT(i,j)) ||
+((DOWN(i,j) => DOWN(i-1,j) && ¬DOWN(i+1,j) && RIGHT(i,j) && ¬LEFT(i,j)) ||
+((DOWN(i,j) => ¬DOWN(i-1,j) && DOWN(i+1,j) && RIGHT(i,j) && ¬LEFT(i,j)) ||
+((DOWN(i,j) => ¬DOWN(i-1,j) && ¬DOWN(i+1,j) && RIGHT(i,j) && LEFT(i,j))
+
+	Al igual que el caso anterior se hizo la conversión a CNF para poder usarlo 
+en el código. Además se hicieron los casos para los cuales se evaluara la cara 
+inferior y esta era una esquina.
+
+
+	De igual forma la evaluación de los vecinos se hizo para las caras izquierda 
+(LEFT) y la cara derecha (RIGHT) de un cuadrante (i,j) en específico. De esta 
+forma el caso general de la cara izquierda quedaria de la siguiente forma:
+
+(LEFT(i,j) => UP(i-1,j) && ¬UP(i,j) && ¬LEFT(i,j+1) &&  DOWN(i-1,j) && ¬DOWN(i,j) && ¬LEFT(i,j-1)) ||
+(LEFT(i,j) => UP(i-1,j) && ¬UP(i,j) && ¬LEFT(i,j+1) &&  ¬DOWN(i-1,j) && DOWN(i,j) && ¬LEFT(i,j-1)) ||
+(LEFT(i,j) => UP(i-1,j) && ¬UP(i,j) && ¬LEFT(i,j+1) &&  ¬DOWN(i-1,j) && ¬DOWN(i,j) && LEFT(i,j-1)) ||
+(LEFT(i,j) => ¬UP(i-1,j) && UP(i,j) && ¬LEFT(i,j+1) &&  DOWN(i-1,j) && ¬DOWN(i,j) && ¬LEFT(i,j-1)) ||
+(LEFT(i,j) => ¬UP(i-1,j) && UP(i,j) && ¬LEFT(i,j+1) &&  ¬DOWN(i-1,j) && DOWN(i,j) && ¬LEFT(i,j-1)) ||
+(LEFT(i,j) => ¬UP(i-1,j) && UP(i,j) && ¬LEFT(i,j+1) &&  ¬DOWN(i-1,j) && ¬DOWN(i,j) && LEFT(i,j-1)) ||
+(LEFT(i,j) => ¬UP(i-1,j) && ¬UP(i,j) && LEFT(i,j+1) &&  DOWN(i-1,j) && ¬DOWN(i,j) && ¬LEFT(i,j-1)) ||
+(LEFT(i,j) => ¬UP(i-1,j) && ¬UP(i,j) && LEFT(i,j+1) &&  ¬DOWN(i-1,j) && DOWN(i,j) && ¬LEFT(i,j-1)) ||
+(LEFT(i,j) => ¬UP(i-1,j) && ¬UP(i,j) && LEFT(i,j+1) &&  ¬DOWN(i-1,j) && ¬DOWN(i,j) && LEFT(i,j-1))
+
+	Al igual que en los casos anteriores se evaluaron casos particulares si nos
+encontrabamos con una cara superior(i=0), cara inferior(i=rows-1) o cara izquierda
+(j=0); ademas se verificaron casos particulares para las esquinas de la cara
+izquierda de la matriz.
+
+De la misma forma que con el las caras inferiores para UP, las caras derechas de
+un cuadrante se verificaran si y solo si j=columns-1, asi evitamos colocar 
+clausulas adicionales. Dicho esto el caso general para la cara derecha quedaría
+de la siguiente manera:
+
+((RIGHT(i,j) => UP(i,j) && ¬RIGHT(i,j-1) && DOWN(i,j) && ¬RIGHT(i,j+1)) ||
+((RIGHT(i,j) => UP(i,j) && ¬RIGHT(i,j-1) && ¬DOWN(i,j) && RIGHT(i,j+1)) ||
+((RIGHT(i,j) => ¬UP(i,j) && RIGHT(i,j-1) && DOWN(i,j) && ¬RIGHT(i,j+1)) ||
+((RIGHT(i,j) => ¬UP(i,j) && RIGHT(i,j-1) && ¬DOWN(i,j) && RIGHT(i,j+1))
